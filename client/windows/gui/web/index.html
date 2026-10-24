@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atlant VPN</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="style.css?v=20261018_3">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <img src="logo.png" alt="Atlant Logo" class="brand-logo-img" style="width:20px;height:20px;object-fit:contain;" />
+        </div>
+        <div class="logo-text">Atlant<span>VPN-клиент</span></div>
+      </div>
+
+      <nav class="nav-menu">
+        <button type="button" class="nav-item active" data-tab="tab-dashboard" aria-label="Подключение">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span>Подключение</span>
+        </button>
+        <button type="button" class="nav-item" data-tab="tab-servers" aria-label="Серверы">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          <span>Серверы</span>
+        </button>
+        <button type="button" class="nav-item" data-tab="tab-routing" aria-label="Маршрутизация">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M6 9v12"/></svg>
+          <span>Маршрутизация</span>
+        </button>
+        <button type="button" class="nav-item" data-tab="tab-settings" aria-label="Настройки">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span>Настройки</span>
+        </button>
+        <button type="button" class="nav-item" data-tab="tab-logs" aria-label="Журнал">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          <span>Журнал</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="theme-toggle-row">
+          <span class="theme-toggle-label">Тёмная тема</span>
+          <button type="button" class="theme-toggle-btn" id="btn-theme-toggle" title="Переключить тему"></button>
+        </div>
+        <button type="button" id="btn-reset-network" class="btn-tool" title="Сброс сети Windows">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          <span>Сброс сети</span>
+        </button>
+        <button type="button" id="btn-exit-app" class="btn-tool" title="Завершить работу приложения">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Выход</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <section id="tab-dashboard" class="tab-pane active">
+        <header class="dashboard-heading">
+          <span class="eyebrow">ATLANT VPN</span>
+          <h1>Подключение</h1>
+          <p>Выберите сервер и запустите VPN.</p>
+        </header>
+        <div class="connect-section">
+          <div class="pulse-wrapper" id="pulse-wrapper">
+            <div class="glow-ring"></div>
+            <div class="glow-ring-outer"></div>
+            <button type="button" id="btn-connect" class="connect-btn" aria-label="Подключить VPN" aria-pressed="false">
+              <div class="btn-inner-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/>
+                </svg>
+              </div>
+              <div class="btn-inner-label" id="connect-label">ПОДКЛЮЧИТЬ</div>
+            </button>
+          </div>
+          <div class="status-indicator-text" id="status-text" role="status">Соединение отключено</div>
+          <p class="connection-caption" id="connection-caption">Выберите сервер и подключитесь, когда будете готовы.</p>
+
+          <!-- Выбор сервера -->
+          <div class="bottom-server-selector" id="bottom-server-selector">
+            <div class="server-card" id="btn-open-server-list" title="Выбрать сервер" role="button" tabindex="0">
+              <div class="server-info-left">
+                <div class="server-globe-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                  </svg>
+                </div>
+                <div class="server-details">
+                  <div class="server-name" id="card-server-name">Добавьте первый сервер</div>
+                  <div class="server-meta" id="card-server-meta">Вставьте ссылку или импортируйте подписку</div>
+                </div>
+              </div>
+              <div class="server-info-right">
+                <button type="button" id="btn-ping" class="ping-badge" title="Проверить пинг">
+                  <span class="ping-dot"></span>
+                  <span id="ping-value">-- ms</span>
+                </button>
+                <div class="server-chevron">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid single-card">
+          <div class="connection-facts">
+            <div><span>Транспорт профиля</span><strong id="dashboard-transport">Не выбран</strong></div>
+            <div><span>Режим подключения</span><strong id="dashboard-mode">—</strong></div>
+          </div>
+          <div class="stat-card switches-card">
+            <div class="switch-row">
+              <div class="switch-info">
+                <div class="switch-title">Режим TUN</div>
+                <div class="switch-desc">Маршрутизация всей системы через адаптер</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="check-tun" aria-label="Режим TUN">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="switch-row">
+              <div class="switch-info">
+                <div class="switch-title">Kill Switch</div>
+                <div class="switch-desc">Блокировать сеть при обрыве VPN</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="check-killswitch" aria-label="Kill Switch">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 2: SERVERS (UNIFIED PROVIDERS & SUBSCRIPTIONS) ================= -->
+      <section id="tab-servers" class="tab-pane">
+        <!-- Top Toolbar like screenshot 2: + Добавить, Вставить, View Toggle -->
+        <div class="servers-top-bar">
+          <button type="button" id="btn-add-server-modal" class="btn-top-action btn-top-add">
+            <span class="btn-top-icon">+</span>
+            <span>Добавить</span>
+          </button>
+          <button type="button" id="btn-paste-clipboard" class="btn-top-action btn-top-paste">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-top-icon-svg">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+            </svg>
+            <span>Вставить</span>
+          </button>
+          <button type="button" id="btn-ping-all" class="btn-top-icon-btn" title="Проверить пинг серверов">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-top-icon-svg">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Grouped Providers / Subscriptions Container -->
+        <div class="providers-container" id="providers-container">
+          <!-- Populated dynamically: ТЕКУЩАЯ ПОДПИСКА and ДРУГИЕ ПРОВАЙДЕРЫ / СЕРВЕРА -->
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: ROUTING (ПРИЛОЖЕНИЯ) ================= -->
+      <section id="tab-routing" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h2>Маршрутизация</h2>
+          </div>
+          <button type="button" id="btn-save-routing" class="btn-primary">Сохранить правила</button>
+        </div>
+
+        <p class="routing-explanation">Правила приложений действуют в режиме TUN. Домен включает поддомены; IP-адреса и подсети тоже поддерживаются. Прямые подключения не защищены VPN.</p><div class="routing-view-picker" role="group" aria-label="Тип правил"><button type="button" data-routing-view="domains" aria-pressed="true">Адреса</button><button type="button" data-routing-view="apps" aria-pressed="false">Приложения</button></div>
+<!-- 3 Режима маршрутизации -->
+        <div class="routing-card-group">
+          <div class="routing-group-title">РЕЖИМ МАРШРУТИЗАЦИИ</div>
+          <div class="route-mode-options">
+            <button type="button" class="route-mode-btn active" data-mode="all" id="btn-mode-all">
+              <div class="route-mode-radio-circle"></div>
+              <div class="route-btn-content">
+                <div class="route-btn-header">
+                  <span class="route-btn-title">Всё через VPN</span>
+                  <span class="route-badge-active">ALL</span>
+                </div>
+                <span class="route-btn-desc">Весь трафик</span>
+              </div>
+            </button>
+
+            <button type="button" class="route-mode-btn" data-mode="rules" id="btn-mode-proxy-apps">
+              <div class="route-mode-radio-circle"></div>
+              <div class="route-btn-content">
+                <div class="route-btn-header">
+                  <span class="route-btn-title">Только по правилам</span>
+                  <span class="route-badge-proxy">PROXY</span>
+                </div>
+                <span class="route-btn-desc">Совпавшие приложения и адреса через VPN</span>
+              </div>
+            </button>
+
+            <button type="button" class="route-mode-btn" data-mode="bypass" id="btn-mode-bypass-apps">
+              <div class="route-mode-radio-circle"></div>
+              <div class="route-btn-content">
+                <div class="route-btn-header">
+                  <span class="route-btn-title">Кроме исключений</span>
+                  <span class="route-badge-direct">DIRECT</span>
+                </div>
+                <span class="route-btn-desc">Совпавшие приложения и адреса напрямую</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Контейнеры режимов -->
+        <div class="routing-mode-panels">
+          <!-- Режим 1: Глобальный (пусто) -->
+          <div class="routing-panel-empty" id="panel-mode-all"><h3>Всё через VPN</h3><p>Исключения не применяются. Ваши списки приложений и адресов сохранены.</p></div>
+
+          <!-- Режим 2: По правилам (Приложения + Домены/IP) -->
+          <div class="routing-panel" id="panel-mode-proxy-apps" style="display:none;">
+            <div class="routing-split-grid">
+              <!-- Блок приложений -->
+              <div class="routing-box">
+                <div class="routing-box-header">
+                  <label>Приложения (.exe)</label>
+                  <span class="app-count-badge" id="count-proxy-apps">0</span>
+                </div>
+
+                <div class="app-toolbar">
+                  <button type="button" class="btn-action-primary" id="btn-pick-file-proxy">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                      <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    Выбрать .exe
+                  </button>
+                  <button type="button" class="btn-action-secondary" id="btn-pick-running-proxy">
+                    Запущенные
+                  </button>
+                </div>
+
+                <div class="apps-list-container" id="list-proxy-apps">
+                  <div class="apps-empty-state">Список пуст</div>
+                </div>
+              </div>
+
+              <!-- Блок доменов и IP -->
+              <div class="routing-box">
+                <div class="routing-box-header">
+                  <label>Домены и IP-адреса</label>
+                  <span class="domain-count-badge" id="count-proxy-domains">0</span>
+                </div>
+                <p class="routing-box-hint">По одному на строку:</p>
+                <textarea id="cfg-proxy-domains" placeholder="youtube.com&#10;googlevideo.com&#10;discord.com&#10;1.1.1.1&#10;10.0.0.0/8" spellcheck="false"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Режим 3: Исключения (Приложения + Домены/IP) -->
+          <div class="routing-panel" id="panel-mode-bypass-apps" style="display:none;">
+            <div class="routing-split-grid">
+              <!-- Блок приложений-исключений -->
+              <div class="routing-box">
+                <div class="routing-box-header">
+                  <label>Приложения в обход VPN (.exe)</label>
+                  <span class="app-count-badge" id="count-bypass-apps">0</span>
+                </div>
+
+                <div class="app-toolbar">
+                  <button type="button" class="btn-action-primary" id="btn-pick-file-bypass">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                      <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    Выбрать .exe
+                  </button>
+                  <button type="button" class="btn-action-secondary" id="btn-pick-running-bypass">
+                    Запущенные
+                  </button>
+                </div>
+
+                <div class="apps-list-container" id="list-bypass-apps">
+                  <div class="apps-empty-state">Список пуст</div>
+                </div>
+              </div>
+
+              <!-- Блок доменов и IP исключений -->
+              <div class="routing-box">
+                <div class="routing-box-header">
+                  <label>Домены и IP в обход VPN</label>
+                  <span class="domain-count-badge" id="count-direct-domains">0</span>
+                </div>
+                <p class="routing-box-hint">По одному на строку:</p>
+                <textarea id="cfg-direct-domains" placeholder="*.ru&#10;gosuslugi.ru&#10;vk.com&#10;yandex.ru&#10;192.168.0.0/16&#10;127.0.0.1" spellcheck="false"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <input type="file" id="input-file-app-picker" accept=".exe" style="display:none;">
+      </section>
+
+      <!-- ================= TAB 4: SETTINGS ================= -->
+      <section id="tab-settings" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <button type="button" id="settings-back" class="btn-secondary" hidden>← Все настройки</button><h2 id="settings-heading">Настройки</h2>
+          </div>
+          <button type="button" id="btn-save-settings" hidden class="btn-primary">Сохранить</button>
+        </div>
+
+        <div class="settings-scroll-area">
+<div id="settings-menu" class="settings-menu"><button type="button" class="settings-menu-item" data-settings-open="language"><span><strong>Язык</strong><small>English · Русский · 简体中文</small></span><span aria-hidden="true">›</span></button><button type="button" class="settings-menu-item" data-settings-open="appearance"><span><strong>Оформление</strong><small>Тема приложения</small></span><span aria-hidden="true">›</span></button>
+<button type="button" class="settings-menu-item" data-settings-open="network"><span><strong>Подключение</strong><small>DNS, MTU, системный VPN и SOCKS5</small></span><span aria-hidden="true">›</span></button>
+<button type="button" class="settings-menu-item" data-settings-open="transport"><span><strong>Транспорт</strong><small>TCP, QUIC, XHTTP и общие соединения</small></span><span aria-hidden="true">›</span></button>
+<button type="button" class="settings-menu-item" data-settings-open="privacy"><span><strong>Маскировка трафика</strong><small>TLS-профиль и заполнение пакетов</small></span><span aria-hidden="true">›</span></button>
+<button type="button" class="settings-menu-item" data-settings-open="diagnostics"><span><strong>Диагностика</strong><small>Уровень записи журнала</small></span><span aria-hidden="true">›</span></button>
+<button type="button" class="settings-menu-item" data-settings-open="advanced"><span><strong>Возможности ядра</strong><small>Доступность дополнительных функций</small></span><span aria-hidden="true">›</span></button></div>
+<div class="settings-card-group" data-settings-section="language" hidden>
+<div class="settings-group-title">Язык интерфейса</div>
+<div class="settings-row"><label for="settings-language" class="settings-info"><span class="settings-title">Язык</span></label><div class="settings-control"><select id="settings-language" class="settings-select"><option value="system">Как в системе</option><option value="en">English</option><option value="ru">Русский</option><option value="zh">简体中文</option></select></div></div>
+</div>
+<div class="settings-card-group" data-settings-section="appearance" hidden>
+<div class="settings-group-title">Тема приложения</div><div class="settings-row"><label for="settings-theme" class="settings-info"><span class="settings-title">Оформление</span><span class="settings-desc">Меняется сразу, без переподключения.</span></label><div class="settings-control"><select id="settings-theme" class="settings-select"><option value="system">Как в системе</option><option value="light">Светлая</option><option value="dark">Тёмная</option></select></div></div></div>
+<p class="settings-apply-hint">Сетевые параметры применяются после сохранения и переподключения. Настройки маскировки не гарантируют нераспознаваемость VPN.</p>
+          <!-- Group 1: MTU and System TUN Network -->
+          <div class="settings-card-group" data-settings-section="network" hidden>
+            <div class="settings-group-title">Подключение</div>
+
+            <!-- MTU Setting (Manual Only) -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Размер MTU</div>
+              </div>
+              <div class="settings-control">
+                <input type="number" id="set-mtu" class="settings-input-num" min="1200" max="1500" value="1360">
+              </div>
+            </div>
+
+            <!-- DNS Setting (Manual Only) -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">DNS-сервер</div>
+              </div>
+              <div class="settings-control">
+                <input type="text" id="set-dns" class="settings-input-text" value="1.1.1.1" placeholder="1.1.1.1">
+              </div>
+            </div>
+
+            <!-- TUN Mode Toggle -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Режим TUN</div>
+                <div class="settings-desc">Маршрутизация системы через адаптер Wintun</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-tun">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- Блокировка при обрыве Toggle -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Блокировка при обрыве</div>
+                <div class="settings-desc">Блокировать интернет при обрыве соединения</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-killswitch">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- Block IPv6 Toggle -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Блокировка IPv6</div>
+                <div class="settings-desc">Отключить IPv6 для защиты от утечек</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-block-ipv6">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Group 2: Protocol -->
+          <div class="settings-card-group" data-settings-section="transport" hidden>
+            <div class="settings-group-title">Передача трафика</div>
+
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Защита соединения</div>
+                <div class="settings-desc">Reality TLS 1.3 с маскировкой под SNI и взаимным 2-ECDH обменом</div>
+              </div>
+              <div class="settings-control">
+                <span class="tag-protocol" style="padding: 6px 12px; font-weight: 600; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; color: var(--accent);">REALITY TLS 1.3</span>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Режим передачи трафика</div>
+                <div class="settings-desc">Выберите общий транспорт или отдельный способ передачи UDP.</div>
+              </div>
+              <div class="settings-control">
+                <select id="set-traffic-mode" class="settings-select">
+                  <option value="split">Раздельно для TCP и UDP</option>
+                  <option value="tcp">Весь трафик через TCP</option>
+                  <option value="udp">Весь трафик через QUIC</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Раскрывается ТОЛЬКО, если выбрано "Раздельно/Смешанный" -->
+            <div id="split-protocol-details" class="split-protocol-subgroup" style="display:none;">
+              <div class="settings-row">
+                <div class="settings-info">
+                  <div class="settings-title">Транспорт TCP</div>
+                  <div class="settings-desc">Транспортный уровень для потоков TCP</div>
+                </div>
+                <div class="settings-control">
+                  <select id="set-tcp-proto" class="settings-select">
+                    <option value="reality">REALITY / TCP</option>
+                    <option value="xhttp">XHTTP / REALITY</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="settings-row">
+                <div class="settings-info">
+                  <div class="settings-title">Передача UDP-трафика</div>
+                  <div class="settings-desc">UDP-пакеты можно передавать через QUIC или TCP.</div>
+                </div>
+                <div class="settings-control">
+                  <select id="set-udp-proto" class="settings-select">
+                    <option value="quic">Через QUIC</option>
+                    <option value="tcp">Через TCP</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mux Toggle -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Общее TCP-соединение</div>
+                <div class="settings-desc">Объединение потоков в сессию Yamux (по умолчанию выключено — прямое соединение 1-в-1)</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-mux">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Group 3: Local Inbound Proxy -->
+          <div class="settings-card-group" data-settings-section="network" hidden>
+            <div class="settings-group-title">Входящий прокси</div>
+
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Адрес SOCKS5</div>
+              </div>
+              <div class="settings-control">
+                <input type="text" id="set-local-port" class="settings-input-text" value="127.0.0.1:1080" placeholder="127.0.0.1:1080" aria-label="Адрес SOCKS5">
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Доступ к SOCKS5 из локальной сети</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-allow-lan">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Group 4: Advanced Anti-DPI, uTLS Fingerprint & Traffic Shaping -->
+          <div class="settings-card-group" data-settings-section="privacy" hidden>
+            <div class="settings-group-title">Маскировка трафика</div>
+
+            <!-- uTLS Fingerprint Mimicry -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">TLS-профиль</div>
+                <div class="settings-desc">Профиль ClientHello через uTLS, не поведение всего браузера. Android/OkHttp несовместим с REALITY; случайный профиль не имитирует браузер. Импортированные значения не заменяются автоматически.</div>
+              </div>
+              <div class="settings-control">
+                <select id="set-fingerprint" class="settings-select">
+                  <option value="chrome">Chrome 144</option>
+                  <option value="chrome_120">Chrome 120 (совместимость)</option>
+                  <option value="firefox" selected>Firefox 120</option>
+                  <option value="safari">Safari 16</option>
+                  <option value="ios">iOS 14</option>
+                  <option value="edge">Microsoft Edge 106</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Random Frame Padding Toggle & Range -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Заполнение пакетов</div>
+                <div class="settings-desc">Добавлять данные для изменения размеров зашифрованных блоков (Padding).</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-padding-enabled" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Размер заполнения, байт</div>
+                <div class="settings-desc">Минимальный и максимальный размер случайного заполнения пакетов</div>
+              </div>
+              <div class="settings-control" style="display: flex; gap: 8px; align-items: center;">
+                <input type="number" id="set-min-padding" class="settings-input-num" min="0" max="512" value="32" style="width: 70px;">
+                <span style="color: var(--text-muted);">-</span>
+                <input type="number" id="set-max-padding" class="settings-input-num" min="16" max="1024" value="256" style="width: 70px;">
+              </div>
+            </div>
+
+            <!-- Chaffing (Background Micro-Noise) Toggle & Settings -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Дополнительные пакеты в простое</div>
+                <div class="settings-desc">Отправлять дополнительные пакеты в паузах. Увеличивает расход трафика.</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-chaffing-enabled" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Интервал пакетов, секунды</div>
+                <div class="settings-desc">Как часто отправлять дополнительные пакеты в простое.</div>
+              </div>
+              <div class="settings-control">
+                <input type="number" id="set-chaffing-interval" class="settings-input-num" min="3" max="60" value="10" style="width: 70px;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Group 5: Maintenance & Logging -->
+          <div class="settings-card-group" data-settings-section="diagnostics" hidden>
+            <div class="settings-group-title">Журнал</div>
+
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Что записывать</div>
+                <div class="settings-desc">Подробный журнал может содержать адреса подключений. Проверяйте его перед отправкой.</div>
+              </div>
+              <div class="settings-control">
+                <select id="set-log-level" class="settings-select">
+                  <option value="debug">Подробный журнал</option>
+                  <option value="info" selected>Info (стандартный)</option>
+                  <option value="warn">Warning (только предупреждения)</option>
+                  <option value="error">Только ошибки</option>
+                  <option value="none">None (без вывода логов)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Сброс сети Windows</div>
+                <div class="settings-desc">Очистка системных маршрутов, DNS и Winsock</div>
+              </div>
+              <button type="button" id="btn-settings-reset-net" class="btn-dark-danger">
+                <span>Сбросить сеть</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Group 5: Anti-DPI и оптимизация протокола -->
+          <div class="settings-card-group" data-settings-section="advanced" hidden>
+            <div class="settings-group-title">Дополнительные функции</div>
+
+            <!-- FakeDNS Toggle -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">FakeDNS · локальные адреса доменов</div>
+                <div class="settings-desc">Пул 198.18.0.0/15 для доменной маршрутизации. Проверка DNS-утечек требуется отдельно.</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-fake-dns" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- Traffic Padding Toggle -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Старый переключатель заполнения</div>
+                <div class="settings-desc">Дублирующий legacy-переключатель не используется Windows-ядром. Настройте «Заполнение пакетов» выше.</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-traffic-padding" disabled aria-label="Legacy padding: используйте настройку выше">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- Happy Eyeballs v2 Toggle -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Резервное подключение через TCP</div>
+                <div class="settings-desc">Не реализовано в текущем Windows-ядре. Выберите транспорт вручную.</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-auto-fallback" disabled aria-label="Автопереключение: не поддерживается">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- Port Hopping Toggle -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Смена порта сервера</div>
+                <div class="settings-desc">Не реализовано в текущем Windows-ядре.</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-port-hopping" disabled aria-label="Port Hopping: не поддерживается">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- Remote DNS Toggle -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Отдельный DNS через VPN</div>
+                <div class="settings-desc">Отдельный переключатель не реализован в Windows-ядре. DNS зависит от TUN и правил маршрутизации.</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-remote-dns" disabled aria-label="Отдельный Remote DNS: не поддерживается">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- Decoy Traffic Toggle -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Фоновый веб-трафик (Decoy)</div>
+                <div class="settings-desc">Генератор фоновых запросов не реализован в Windows-ядре. Серверный decoy работает независимо.</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-decoy-traffic" disabled aria-label="Фоновый Decoy: не поддерживается">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <!-- 0-RTT Toggle -->
+            <div class="settings-row">
+              <div class="settings-info">
+                <div class="settings-title">Ранние данные QUIC (0-RTT)</div>
+                <div class="settings-desc">Early data не используется: полезные данные требуют взаимной аутентификации.</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="set-zero-rtt" disabled aria-label="0-RTT: не поддерживается">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-logs" class="tab-pane">
+        <div class="pane-header">
+          <h2>Журнал</h2>
+          <div class="pane-actions">
+            <button type="button" id="btn-clear-logs" class="btn-secondary">Очистить</button>
+            <button type="button" id="btn-copy-logs" class="btn-secondary">Копировать</button>
+          </div>
+        </div>
+
+        <div class="terminal-container">
+          <pre id="log-output">Atlant VPN готов к работе.</pre>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Add Server Modal -->
+  <div id="modal-add-server" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Добавить сервер</h3>
+        <button type="button" class="btn-modal-close" id="btn-close-server-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Название</label>
+          <input type="text" id="m-srv-name" placeholder="Finland VPS">
+        </div>
+        <div class="form-group">
+          <label>Адрес (Host:Port)</label>
+          <input type="text" id="m-srv-host" placeholder="server.example:1026">
+        </div>
+        <div class="form-group">
+          <label>SNI</label>
+          <input type="text" id="m-srv-sni" placeholder="www.microsoft.com">
+        </div>
+        <div class="form-group">
+          <label>Public Key</label>
+          <input type="text" id="m-srv-pubkey" placeholder="64 hex символа из вашего профиля">
+        </div>
+        <div class="form-group">
+          <label>PBK (Pre-shared Key)</label>
+          <input type="text" id="m-srv-pbk" placeholder="64 hex символа из вашего профиля">
+        </div>
+        <div class="form-group">
+          <label>Пользователь</label>
+          <input type="text" id="m-srv-user" placeholder="test">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-add-server" class="btn-ghost">Отмена</button>
+        <button type="button" id="btn-save-new-server" class="btn-primary">Добавить сервер</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modern Dark Server Configuration Editor Modal -->
+  <div id="modal-edit-config" class="modal-overlay">
+    <div class="modal-box modal-box-dark">
+      <div class="modal-header-dark">
+        <div class="modal-title-wrap">
+          <div class="modal-badge-dot"></div>
+          <h3 class="modal-title-dark" id="edit-modal-title">Настройки сервера</h3>
+        </div>
+        <div class="modal-header-actions">
+          <button type="button" class="modal-tab-btn active" id="tab-btn-fields">Параметры</button>
+          <button type="button" class="modal-tab-btn" id="tab-btn-json">JSON</button>
+          <button type="button" class="btn-modal-close-dark" id="btn-close-edit-modal">&times;</button>
+        </div>
+      </div>
+
+      <div class="modal-body-dark">
+        <!-- View 1: Visual Settings Form -->
+        <div id="edit-pane-fields" class="edit-pane active">
+          <div class="edit-form-grid">
+            <div class="edit-form-group">
+              <label>Название</label>
+              <input type="text" id="ed-srv-name" placeholder="Finland VPS">
+            </div>
+            <div class="edit-form-group">
+              <label>Адрес (Host:Port)</label>
+              <input type="text" id="ed-srv-host" placeholder="server.example:1026">
+            </div>
+            <div class="edit-form-group">
+              <label>SNI</label>
+              <input type="text" id="ed-srv-sni" placeholder="www.microsoft.com">
+            </div>
+            <div class="edit-form-group">
+              <label>Пользователь</label>
+              <input type="text" id="ed-srv-user" placeholder="test">
+            </div>
+            <div class="edit-form-group full-width">
+              <label>Public Key</label>
+              <input type="text" id="ed-srv-pubkey" placeholder="64 hex символа из вашего профиля">
+            </div>
+            <div class="edit-form-group full-width">
+              <label>PBK (Pre-shared Key)</label>
+              <input type="text" id="ed-srv-pbk" placeholder="64 hex символа из вашего профиля">
+            </div>
+            <div class="edit-form-group full-width">
+              <label>Группа / Подписка</label>
+              <input type="text" id="ed-srv-group" placeholder="Моя подписка Atlant (или оставить пустым)">
+            </div>
+            <div class="edit-form-group full-width">
+              <label>Маскировка</label>
+              <select id="ed-srv-security">
+                <option value="reality">Reality (TLS 1.3 disguise)</option>
+                <option value="tls">TLS</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- View 2: Raw JSON Editor -->
+        <div id="edit-pane-json" class="edit-pane">
+          <div class="json-header-label-dark">Конфигурация JSON</div>
+          <textarea id="edit-server-json" class="json-textarea-dark" spellcheck="false"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer-dark">
+        <div class="footer-left-actions">
+          <button type="button" id="btn-delete-server" class="btn-dark-danger" title="Удалить этот сервер">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="footer-btn-icon">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+            <span>Удалить</span>
+          </button>
+          <button type="button" id="btn-test-ping-modal" class="btn-dark-secondary" title="Проверить пинг">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="footer-btn-icon">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+            <span id="modal-ping-label">Пинг</span>
+          </button>
+          <button type="button" id="btn-share-server" class="btn-dark-secondary" title="Скопировать ссылку atlant://">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="footer-btn-icon">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span>Поделиться</span>
+          </button>
+        </div>
+
+        <div class="footer-right-actions">
+          <button type="button" id="btn-cancel-edit" class="btn-dark-ghost">Отмена</button>
+          <button type="button" id="btn-save-edit-server" class="btn-dark-save">Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modern Dark Subscription Configuration Editor Modal -->
+  <div id="modal-edit-subscription" class="modal-overlay">
+    <div class="modal-box modal-box-dark">
+      <div class="modal-header-dark">
+        <div class="modal-title-wrap">
+          <div class="modal-badge-dot"></div>
+          <h3 class="modal-title-dark" id="sub-modal-title">Редактирование подписки</h3>
+        </div>
+        <button type="button" class="btn-modal-close-dark" id="btn-close-sub-modal">&times;</button>
+      </div>
+
+      <div class="modal-body-dark">
+        <div class="edit-form-grid">
+          <div class="edit-form-group full-width">
+            <label>Название подписки</label>
+            <input type="text" id="sub-edit-name" placeholder="Моя подписка Atlant">
+          </div>
+          <div class="edit-form-group full-width">
+            <label>URL адрес подписки (ссылка для автообновления)</label>
+            <input type="text" id="sub-edit-url" placeholder="https://example.com/api/v1/client/subscribe?...">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer-dark">
+        <div class="footer-left-actions">
+          <button type="button" id="btn-delete-sub-modal" class="btn-dark-danger" title="Удалить подписку">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="footer-btn-icon">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+            <span>Удалить подписку</span>
+          </button>
+        </div>
+        <div class="footer-right-actions">
+          <button type="button" id="btn-cancel-sub-modal" class="btn-dark-ghost">Отмена</button>
+          <button type="button" id="btn-save-sub-modal" class="btn-dark-save">Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Running Processes Modal -->
+  <div id="modal-running-apps" class="modal-overlay">
+    <div class="modal-box modal-box-wide">
+      <div class="modal-header">
+        <h3>Запущенные приложения</h3>
+        <button type="button" class="btn-modal-close" id="btn-close-running-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" style="margin-bottom: 4px;">
+          <input type="text" id="input-search-running-apps" placeholder="Поиск процесса (chrome, telegram)..." spellcheck="false">
+        </div>
+        <div class="running-apps-list" id="running-apps-items">
+          <div class="running-apps-loading">Загрузка активных процессов...</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-running-modal" class="btn-ghost">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="ui-language.js"></script>
+  <script src="client-languages.js?v=20261024"></script>
+  <script src="i18n.js?v=20261024"></script>
+  <script src="theme.js?v=20261018_3"></script>
+  <script src="usage.js?v=20261020"></script>
+  <script src="qrcode.js?v=20261023"></script>
+  <script src="share.js?v=20261023"></script>
+  <script src="app.js?v=20261020"></script>
+  <script src="settings-nav.js?v=20261018_3"></script>
+</body>
+</html>

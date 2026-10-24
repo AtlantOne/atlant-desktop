@@ -1,0 +1,30 @@
+name: Desktop checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-2025
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+        with:
+          go-version-file: client/windows/gui/go.mod
+          cache-dependency-path: client/windows/gui/go.sum
+      - shell: pwsh
+        run: |
+          node --test tests/ui/*.test.cjs
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          # Tests run before adding the UAC resource to the application binary.
+          go -C client/windows/gui test ./...
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          Push-Location client/windows/gui
+          go run github.com/akavel/rsrc@v0.10.2 -arch amd64 -manifest app.manifest -o rsrc.syso
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          Pop-Location
+          New-Item -ItemType Directory -Force artifacts/current
+          go -C client/windows/gui build -trimpath -ldflags="-H=windowsgui" -o ../../../artifacts/current/atlant-gui.exe .
+          exit $LASTEXITCODE
