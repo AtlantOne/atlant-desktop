@@ -3,6 +3,11 @@
 Windows graphical client for [Atlant Core](https://github.com/AtlantOne/atlant-core).
 Linux/macOS GUI support is not claimed by this repository.
 
+## Download
+
+Download the ZIP for your Windows architecture from [Releases](https://github.com/AtlantOne/atlant-desktop/releases).
+Extract the entire archive and run `bin/atlant-gui.exe`; the matching core and Wintun DLL must remain beside it.
+
 ## Build on Windows
 
 ```powershell

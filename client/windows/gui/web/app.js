@@ -1663,8 +1663,19 @@ if (btnSaveSubModal) {
 const btnPasteClipboard = document.getElementById('btn-paste-clipboard');
 if (btnPasteClipboard) {
   btnPasteClipboard.addEventListener('click', async () => {
+    if (btnPasteClipboard.disabled) return;
+    btnPasteClipboard.disabled = true;
     try {
-      const text = await navigator.clipboard.readText();
+      let text;
+      try {
+        text = await navigator.clipboard.readText();
+      } catch (_) {
+        // App-mode browsers may deny Clipboard API access. The authenticated
+        // local backend can read Windows Unicode text without browser permission.
+        const clipboardResponse = await fetch('/api/clipboard/text', { method: 'POST' });
+        if (!clipboardResponse.ok) throw new Error(await clipboardResponse.text());
+        text = (await clipboardResponse.json()).text;
+      }
       if (!text || !text.trim()) {
         showToast(tr("Буфер обмена пуст"));
         return;
@@ -1675,30 +1686,18 @@ if (btnPasteClipboard) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: text.trim() })
       });
+      if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
       if (data.success) {
-        showToast(tr("Импортировано: {0} сервер(ов)", data.added_count || 1));
+        showToast(tr("Импортировано: {0} сервер(ов)", data.added_count ?? 0));
         await loadConfig();
       } else {
         showToast(tr("Ошибка импорта: ") + (data.error || tr("Неверная ссылка")));
       }
     } catch (err) {
-      // Fallback prompt if clipboard permission denied
-      const manualLink = prompt(tr("Вставьте ссылку на подписку или сервер (atlant://, https://):"));
-      if (manualLink && manualLink.trim()) {
-        const res = await fetch('/api/servers/paste', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: manualLink.trim() })
-        });
-        const data = await res.json();
-        if (data.success) {
-          showToast(tr("Импортировано: {0} сервер(ов)", data.added_count || 1));
-          await loadConfig();
-        } else {
-          showToast(tr("Ошибка: ") + (data.error || tr("Сбой")));
-        }
-      }
+      showToast(tr("Ошибка импорта: ") + err.message);
+    } finally {
+      btnPasteClipboard.disabled = false;
     }
   });
 }
@@ -1813,6 +1812,13 @@ if (btnExitApp) {
 }
 
 // стартовая инициализация и опрос статуса
+// Closing the window releases the connection. Reloads reconnect within grace;
+// minimized windows do not depend on JavaScript heartbeat timer frequency.
+const windowLifetime = new EventSource('/api/ui/lifetime');
+window.addEventListener('pagehide', () => windowLifetime.close());
+window.addEventListener('pageshow', event => {
+  if (event.persisted) window.location.reload();
+});
 loadConfig();
 checkPing();
 setInterval(pollStatusAndLogs, 1000);

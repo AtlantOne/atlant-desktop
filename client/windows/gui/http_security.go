@@ -39,7 +39,7 @@ func newGUIHandler(host string, next http.Handler, bootstrapToken string) (http.
 	var mutationMu sync.Mutex
 	var bootstrapMu sync.Mutex
 	cookieName := "atlant-session-" + strings.ReplaceAll(host, ":", "-")
-	readOnly := map[string]bool{"/api/status": true, "/api/config": true, "/api/ping": true, "/api/apps/running": true}
+	readOnly := map[string]bool{"/api/status": true, "/api/config": true, "/api/ping": true, "/api/apps/running": true, "/api/ui/lifetime": true}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("X-Frame-Options", "DENY")

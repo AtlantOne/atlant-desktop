@@ -20,6 +20,7 @@ import (
 	"sync"
 	"syscall"
 	"time"
+	"unsafe"
 
 	"golang.org/x/sys/windows"
 	"golang.org/x/sys/windows/registry"
@@ -29,19 +30,16 @@ import (
 var webFS embed.FS
 
 var (
-	coreCmd       *exec.Cmd
-	coreDone      chan struct{}
-	coreStdin     io.WriteCloser
-	cmdMu         sync.Mutex
-	isConnected   bool
-	logMu         sync.Mutex
-	logBuffer     []string
-	maxLogs       = 500
-	savedGateway  string
-	activeConfig  *AppConfig
-	lastHeartbeat = time.Now()
-	heartbeatMu   sync.Mutex
-	browserCmd    *exec.Cmd
+	coreCmd      *exec.Cmd
+	coreDone     chan struct{}
+	coreStdin    io.WriteCloser
+	cmdMu        sync.Mutex
+	isConnected  bool
+	logMu        sync.Mutex
+	logBuffer    []string
+	maxLogs      = 500
+	savedGateway string
+	activeConfig *AppConfig
 )
 
 type ServerProfile struct {
@@ -515,13 +513,14 @@ func stopCore() {
 		coreStdin = nil
 	}
 
-	// Ждем штатного завершения ядра (до 2.5 сек для корректного освобождения адаптера Wintun и таблицы маршрутов)
+	// Allow route, firewall and adapter cleanup before considering forced exit.
 	if coreCmd != nil && coreCmd.Process != nil {
 		proc := coreCmd.Process
 		select {
 		case <-coreDone:
-		case <-time.After(2500 * time.Millisecond):
+		case <-time.After(12 * time.Second):
 			_ = proc.Kill()
+			<-coreDone
 		}
 		coreCmd = nil
 		coreDone = nil
@@ -713,7 +712,7 @@ func launchBrowserWindow(url string) {
 				"--disable-renderer-backgrounding",
 			)
 			if err := cmd.Start(); err == nil {
-				browserCmd = cmd
+				go cmd.Wait()
 				return
 			}
 		}
@@ -732,7 +731,7 @@ func launchBrowserWindow(url string) {
 			"--disable-renderer-backgrounding",
 		)
 		if err := cmd.Start(); err == nil {
-			browserCmd = cmd
+			go cmd.Wait()
 			return
 		}
 	}
@@ -765,6 +764,14 @@ func main() {
 		runMeElevated()
 		return
 	}
+	releaseInstance, err := acquireGUIInstance(`Local\AtlantVPN.GUI`)
+	if err != nil {
+		message, _ := windows.UTF16PtrFromString("Atlant уже запущен. Закройте предыдущее окно или процесс перед повторным запуском.\n\nAtlant is already running. Close the existing application first.")
+		title, _ := windows.UTF16PtrFromString("Atlant")
+		windows.NewLazySystemDLL("user32.dll").NewProc("MessageBoxW").Call(0, uintptr(unsafe.Pointer(message)), uintptr(unsafe.Pointer(title)), 0x30)
+		return
+	}
+	defer releaseInstance()
 
 	activeConfig = loadConfig()
 	appendLog("[GUI] Atlant VPN GUI launcher started")
@@ -782,6 +789,17 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+	var shutdownOnce sync.Once
+	shutdownGUI := func() {
+		shutdownOnce.Do(func() {
+			go func() {
+				stopCore()
+				os.Exit(0)
+			}()
+		})
+	}
+	windowLifetime := newUILifetime(60*time.Second, 5*time.Second, shutdownGUI)
+	mux.Handle("/api/ui/lifetime", windowLifetime)
 	uiDirectory, err := os.UserConfigDir()
 	if err != nil {
 		log.Fatalf("Cannot locate UI preferences directory: %v", err)
@@ -798,10 +816,6 @@ func main() {
 	})
 
 	mux.HandleFunc("/api/status", func(w http.ResponseWriter, r *http.Request) {
-		heartbeatMu.Lock()
-		lastHeartbeat = time.Now()
-		heartbeatMu.Unlock()
-
 		cmdMu.Lock()
 		conn := isConnected
 		cmdMu.Unlock()
@@ -822,8 +836,7 @@ func main() {
 		json.NewEncoder(w).Encode(map[string]interface{}{"success": true})
 		go func() {
 			time.Sleep(100 * time.Millisecond)
-			stopCore()
-			os.Exit(0)
+			shutdownGUI()
 		}()
 	})
 
@@ -970,6 +983,7 @@ func main() {
 	})
 
 	// Paste link or subscription from clipboard
+	mux.HandleFunc("/api/clipboard/text", clipboardTextHandler)
 	mux.HandleFunc("/api/servers/paste", func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
 			Text string `json:"text"`
@@ -1017,6 +1031,10 @@ func main() {
 				}
 			}
 
+			if len(newServers) == 0 {
+				http.Error(w, "No valid Atlant profiles or subscription URLs found", http.StatusBadRequest)
+				return
+			}
 			existingMap := make(map[string]bool)
 			for _, s := range cfg.Servers {
 				existingMap[profileIdentity(s)] = true

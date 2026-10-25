@@ -41,6 +41,13 @@ func TestGUIRejectsCSRFRebindingAndMutatingGET(t *testing.T) {
 	}{
 		{"POST", "/api/disconnect", "", "", host, false, 401},
 		{"GET", "/api/config", "", "", host, false, 401},
+		{"GET", "/api/ui/lifetime", "", "", host, false, 401},
+		{"GET", "/api/ui/lifetime", "https://evil.example", "", host, true, 403},
+		{"GET", "/api/ui/lifetime", "http://" + host, "same-origin", host, true, 204},
+		{"POST", "/api/clipboard/text", "", "", host, false, 401},
+		{"GET", "/api/clipboard/text", "", "", host, true, 405},
+		{"POST", "/api/clipboard/text", "https://evil.example", "", host, true, 403},
+		{"POST", "/api/clipboard/text", "http://" + host, "same-origin", host, true, 204},
 		{"POST", "/api/disconnect", "https://evil.example", "", host, true, 403},
 		{"POST", "/api/disconnect", "null", "", host, true, 403},
 		{"POST", "/api/disconnect", "", "cross-site", host, true, 403},
