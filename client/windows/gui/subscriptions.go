@@ -72,6 +72,18 @@ func selectSubscriptionProfile(cfg *AppConfig, p ServerProfile) {
 	applyProfileTransport(cfg, p)
 }
 
+func selectFirstProfileIfUnset(cfg *AppConfig) {
+	if cfg.ActiveServerID != "" || cfg.Server != "" {
+		return
+	}
+	for _, p := range cfg.Servers {
+		if p.ID != "" && p.Server != "" {
+			selectSubscriptionProfile(cfg, p)
+			return
+		}
+	}
+}
+
 func clearSelectedProfile(cfg *AppConfig) {
 	cfg.ActiveServerID, cfg.Server, cfg.SNI, cfg.PBK, cfg.User, cfg.ServerPubKey = "", "", "", "", "", ""
 	cfg.Path = ""

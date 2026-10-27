@@ -317,7 +317,7 @@ async function loadConfig() {
     let activeMeta = cfg.server ? tr("Профиль Atlant") : tr("Вставьте ссылку или импортируйте подписку");
     let activeTransport = cfg.server ? (cfg.transport || 'reality') : tr("Не выбран");
     if (cfg.servers && cfg.servers.length > 0) {
-      const activeSrv = cfg.servers.find(s => s.id === cfg.active_server_id) || cfg.servers[0];
+      const activeSrv = cfg.servers.find(s => s.id === cfg.active_server_id);
       if (activeSrv) {
         activeName = activeSrv.name || activeSrv.server;
         activeTransport = activeSrv.transport || cfg.transport || 'reality';

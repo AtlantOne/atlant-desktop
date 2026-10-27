@@ -197,11 +197,13 @@ func loadConfig() *AppConfig {
 		cfg.LocalPort = "127.0.0.1:1080"
 	}
 	normalizeSubscriptions(cfg)
+	selectFirstProfileIfUnset(cfg)
 	return cfg
 }
 
 func saveConfig(cfg *AppConfig) error {
 	normalizeSubscriptions(cfg)
+	selectFirstProfileIfUnset(cfg)
 	data, err := json.MarshalIndent(cfg, "", "  ")
 	if err != nil {
 		return err
