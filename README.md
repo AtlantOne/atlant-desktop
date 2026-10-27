@@ -1,7 +1,16 @@
 # Atlant Desktop
 
-Windows graphical client for [Atlant Core](https://github.com/AtlantOne/atlant-core).
-Linux/macOS GUI support is not claimed by this repository.
+Atlant's Windows app manages subscriptions, server profiles and VPN connections
+through a graphical interface. It uses [Atlant Core](https://github.com/AtlantOne/atlant-core)
+for TCP/REALITY, XHTTP over REALITY and direct QUIC REALITY.
+
+QUIC starts directly over UDP with key-based authentication, without a TCP
+bootstrap, access tickets or a CA-issued certificate for the VPN server.
+Choose a transport to suit your network, or use split transport selection for
+TCP and UDP traffic. TUN mode routes traffic through the Wintun adapter.
+
+The interface supports English, Russian and Chinese. For the Linux command-line
+client, see the core repository.
 
 ## Download
 
@@ -24,4 +33,4 @@ Do not put personal connection profiles, keys, or the Wintun binary in source
 control. The GUI and core have independent build modules.
 
 Original GUI sources are MIT licensed; see `LICENSE`. Dependency terms remain
-unchanged. See `THREAT_MODEL.md` for experimental protocol limitations.
+unchanged. See `THREAT_MODEL.md` for the protocol's security boundaries.
