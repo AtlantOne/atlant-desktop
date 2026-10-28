@@ -1,5 +1,7 @@
 # Atlant Desktop
 
+[Download for Windows](https://github.com/AtlantOne/atlant-desktop/releases) · [Main project](https://github.com/AtlantOne/atlant-core) · [Help and feedback](https://github.com/AtlantOne/atlant-core/discussions/categories/q-a)
+
 Atlant's Windows app manages subscriptions, server profiles and VPN connections
 through a graphical interface. It uses [Atlant Core](https://github.com/AtlantOne/atlant-core)
 for both TCP and QUIC: direct REALITY or XHTTP on the TCP path, and direct
@@ -17,6 +19,10 @@ client, see the core repository.
 
 Download the ZIP for your Windows architecture from [Releases](https://github.com/AtlantOne/atlant-desktop/releases).
 Extract the entire archive and run `bin/atlant-gui.exe`; the matching core and Wintun DLL must remain beside it.
+
+Import an Atlant subscription or server profile, select a server and connect.
+TUN mode needs administrator permission. You need a profile from your own
+server or its operator; no shared public VPN endpoint is bundled.
 
 ## Build on Windows
 
