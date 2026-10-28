@@ -2,10 +2,11 @@
 
 Atlant's Windows app manages subscriptions, server profiles and VPN connections
 through a graphical interface. It uses [Atlant Core](https://github.com/AtlantOne/atlant-core)
-for TCP/REALITY, XHTTP over REALITY and direct QUIC REALITY.
+for both TCP and QUIC: direct REALITY or XHTTP on the TCP path, and direct
+QUIC REALITY over UDP.
 
 QUIC starts directly over UDP with key-based authentication, without a TCP
-bootstrap, access tickets or a CA-issued certificate for the VPN server.
+bootstrap or a CA-issued certificate for the VPN server.
 Choose a transport to suit your network, or use split transport selection for
 TCP and UDP traffic. TUN mode routes traffic through the Wintun adapter.
 
