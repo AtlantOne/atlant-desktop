@@ -87,7 +87,7 @@ func newGUIHandler(host string, next http.Handler, bootstrapToken string) (http.
 				}
 			}
 		}
-		if api && r.Method == http.MethodPost {
+		if api && r.Method == http.MethodPost && !strings.HasPrefix(r.URL.Path, "/api/admin/") {
 			mutationMu.Lock()
 			defer mutationMu.Unlock()
 		}

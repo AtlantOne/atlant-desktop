@@ -810,6 +810,7 @@ func main() {
 	mux.Handle("/api/ui/preferences", newUIPreferencesHandler(uiPreferencesPath))
 	mux.HandleFunc("/ui-language.js", uiLanguageScript(uiPreferencesPath))
 	fileServer := http.FileServer(http.FS(subFS))
+	mux.HandleFunc("/api/admin/", adminHandler)
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 		w.Header().Set("Pragma", "no-cache")

@@ -19,6 +19,8 @@ jobs:
           node --test tests/ui/*.test.cjs
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           # Tests run before adding the UAC resource to the application binary.
+          go -C client/remoteadmin test ./...
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
           go -C client/windows/gui test ./...
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           Push-Location client/windows/gui
