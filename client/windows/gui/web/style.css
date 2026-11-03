@@ -9,8 +9,8 @@
   --bg-surface:    #ffffff;
   --bg-elevated:   #eeeeef;
   --bg-hover:      #e8e8eb;
-  --border:        rgba(0,0,0,0.08);
-  --border-strong: rgba(0,0,0,0.14);
+  --border:        #b8b8c1;
+  --border-strong: #85858f;
   --txt:           #171719;
   --txt-2:         #626268;
   --txt-3:         #71717a;
@@ -36,8 +36,8 @@
   --bg-surface:    #141416;
   --bg-elevated:   #202023;
   --bg-hover:      #29292e;
-  --border:        rgba(255,255,255,0.07);
-  --border-strong: rgba(255,255,255,0.13);
+  --border:        #48484f;
+  --border-strong: #72727c;
   --txt:           #f4f4f5;
   --txt-2:         #adadb5;
   --txt-3:         #92929c;
@@ -1458,3 +1458,9 @@ input:disabled + .slider { opacity: .35; cursor: not-allowed; }
 .managed-log{white-space:pre-wrap;overflow-wrap:anywhere;max-height:60vh;overflow:auto;background:#09090b;color:#ddd;padding:18px;border:1px solid #303034;border-radius:18px;font:12px/1.7 monospace}
 @media(max-width:650px){.managed-row{align-items:flex-start;flex-direction:column}.managed-tabs{gap:5px}.managed-tabs button{padding:8px}.managed-actions{width:100%}}
 .managed-console,.admin-editor{animation:none!important}.managed-actions button{transition:background-color .08s ease}.admin-editor fieldset{border:1px solid var(--border);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}.admin-editor fieldset legend{padding:0 6px;color:var(--txt-2);font-size:12px}.admin-editor fieldset input[type=search]{width:100%;padding:10px;border:1px solid var(--border);border-radius:12px;background:var(--bg-surface);color:var(--txt)}.admin-editor fieldset>div{max-height:36vh;overflow:auto}.admin-editor fieldset .admin-remember{padding:8px 0}
+
+/* Keep rounded controls distinct from the surrounding card. */
+.nav-item.active{box-shadow:inset 0 0 0 1px var(--border-strong)}
+.server-card.selected,.routing-view-picker button.active{border-color:var(--border-strong)}
+input:not([type=checkbox]):not([type=radio]),select,textarea{border-color:var(--border-strong)}
+.modal-header,.admin-editor>header{border-bottom:1px solid var(--border)}
